@@ -19,9 +19,10 @@ public class Post {
     @NotNull
     private String content;
 
+    /**
     @ManyToMany
     @NotNull
-    private User author;
+    private User author; **/
 
 
     @NotNull

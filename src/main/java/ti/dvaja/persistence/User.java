@@ -9,10 +9,11 @@ import java.util.Set;
  * Created by drichtar on 2/17/17.
  */
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotNull
@@ -25,7 +26,7 @@ public class User {
 
     private String email;
 
-    private Set<Post> posts = new HashSet<>();
+    //private Set<Post> posts = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles")
@@ -72,13 +73,14 @@ public class User {
         this.email = email;
     }
 
+    /**
     public Set<Post> getPosts() {
         return posts;
     }
 
     public void setPosts(Set<Post> posts) {
         this.posts = posts;
-    }
+    } **/
 
     public Set<Role> getRoles() {
         return roles;

@@ -11,8 +11,8 @@ import java.util.List;
  * Created by drichtar on 2/17/17.
  */
 @Service
-public class PostServiceImpl implements UserDetailsService {
-
+public class PostServiceImpl {//implements UserDetailsService {
+    /**
     @Override
     public <S extends T> S save(S s) {
         return null;
@@ -92,4 +92,6 @@ public class PostServiceImpl implements UserDetailsService {
     public void deleteById(Long id) {
 
     }
+
+    **/
 }

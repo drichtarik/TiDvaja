@@ -9,17 +9,18 @@ import java.util.Set;
  * Created by drichtar on 2/17/17.
  */
 @Entity
+@Table(name = "roles")
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotNull
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "role")
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     public Role(){

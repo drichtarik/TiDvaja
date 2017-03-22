@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
  * Created by drichtar on 2/17/17.
  */
 @Service
-public class UserService implements UserDetailsService {
+public class UserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserDetailService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByName(name);
 
         if (user == null) {
-            throw new UsernameNotFoundException("Invalid Username!");
+            throw new UsernameNotFoundException("Invalid is null!");
         } else {
             Set<GrantedAuthority> grantedAuthorities = user.getRoles()
                     .stream()
