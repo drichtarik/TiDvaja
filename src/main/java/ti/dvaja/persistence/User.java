@@ -16,17 +16,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
     @Column(nullable = false, unique = true)
     private String name;
 
-    @NotNull
     @Column(nullable = false, length = 60)
     private String password;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
-    //private Set<Post> posts = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_posts")
+    private Set<Post> posts = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles")
@@ -39,6 +40,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.roles = new HashSet<>();
+        this.posts = new HashSet<>();
     }
 
     public long getId() {
@@ -73,14 +75,13 @@ public class User {
         this.email = email;
     }
 
-    /**
     public Set<Post> getPosts() {
         return posts;
     }
 
     public void setPosts(Set<Post> posts) {
         this.posts = posts;
-    } **/
+    }
 
     public Set<Role> getRoles() {
         return roles;
@@ -88,5 +89,13 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public void addPost(Post post) {
+        this.posts.add(post);
     }
 }

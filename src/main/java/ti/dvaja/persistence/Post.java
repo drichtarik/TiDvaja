@@ -1,32 +1,39 @@
 package ti.dvaja.persistence;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.GregorianCalendar;
+import java.util.Set;
 
 /**
  * Created by drichtar on 2/16/17.
  */
 @Entity
+@Table(name = "posts")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private String title;
 
-    @NotNull
+    @Column(nullable = false)
     private String content;
 
-    /**
-    @ManyToMany
-    @NotNull
-    private User author; **/
+    @ManyToMany(mappedBy = "posts")
+    @Column(nullable = false)
+    private Set<User> authors;
 
-
-    @NotNull
+    @Column(nullable = false)
     private GregorianCalendar date = new GregorianCalendar();
+
+    public Post(){}
+
+    public Post(String title, String content, Set<User> authors) {
+        this.title = title;
+        this.content = content;
+        this.authors = authors;
+    }
 
     public Long getId() {
         return id;
@@ -58,5 +65,10 @@ public class Post {
 
     public void setDate(GregorianCalendar date) {
         this.date = date;
+    }
+
+    @Transient
+    public String getSummary() {
+        return this.getContent().substring(0, this.getContent().length() / 2) + "...";
     }
 }

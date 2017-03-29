@@ -14,9 +14,8 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
-    @NotNull
     @Column(nullable = false, unique = true)
     private String name;
 
@@ -27,7 +26,7 @@ public class Role {
         this.users = new HashSet<>();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -8,5 +8,5 @@ import ti.dvaja.persistence.User;
  */
 public interface UserRepository extends CrudRepository<User, Integer> {
 
-    User findByName(String name);
+    User findByUsername(String username);
 }

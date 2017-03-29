@@ -1,8 +1,8 @@
-<header th:fragment="header">
+<header  th:fragment="header">
     <div class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a th:href="@{/}" class="navbar-brandv">Tí Dvaja</a>
+                <a th:href="@{/}" class="navbar-brand">Tí Dvaja</a>
 
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
@@ -11,25 +11,30 @@
                 </button>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="<nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right">
                     <li sec:authorize="isAuthenticated()">
-                        <a th:href="<@{/profile}">
+                        <a th:href="@{/post/create}">
+                            Nový článok
+                        </a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()">
+                        <a th:href="@{/profile}">
                             Môj profil
                         </a>
                     </li>
-                    <li sec:authorize="<isAuthenticated()">
-                        <a th:href="<@{/logout}">
+                    <li sec:authorize="isAuthenticated()">
+                        <a th:href="@{/logout}">
                             Logout
                         </a>
                     </li>
 
-                    <li sec:authorize="<isAnonymous()">
-                        <a th:href="<@{/register}">
+                    <li sec:authorize="isAnonymous()">
+                        <a th:href="@{/register}">
                             REGISTER
                         </a>
                     </li>
-                    <li sec:authorize="<isAnonymous()">
-                        <a th:href="<@{/login}">
+                    <li sec:authorize="isAnonymous()">
+                        <a th:href="@{/login}">
                             LOGIN
                         </a>
                     </li>
