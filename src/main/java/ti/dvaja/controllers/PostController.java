@@ -41,7 +41,7 @@ public class PostController {
     public String createProcess(PostBindingModel postBindingModel) {
         UserDetail user = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        User userEntity = this.userRepository.findByUsername(user.getUsername());
+        User userEntity = this.userRepository.findByEmail(user.getUsername());
 
         Set<User> authors = new HashSet<>();
         authors.add(userEntity);

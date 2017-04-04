@@ -88,7 +88,7 @@ public class UserController {
                 .getAuthentication()
                 .getPrincipal();
 
-        User user = this.userRepository.findByName(principal.getUsername());
+        User user = this.userRepository.findByEmail(principal.getUsername());
 
         model.addAttribute("user", user);
         model.addAttribute("view", "user/profile");

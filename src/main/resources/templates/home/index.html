@@ -10,13 +10,15 @@
 
                         <p th:text="${post.summary}"></p>
 
+                        <!--
                         <th:block th:each="user : ${post.authors}">
                             <small class="author" th:text="user.name"></small>
                         </th:block>
+                        -->
 
                         <footer>
                             <div class="pull-right">
-                                <a class="btn btn-default btn-xs" th:href="@{/post/{id}{id=${post.id})}">Read more &raquo;</a>
+                                <a class="btn btn-default btn-xs" th:href="@{/post/{id}(id=${post.id})}">Read more &raquo;</a>
                             </div>
                         </footer>
                     </article>
