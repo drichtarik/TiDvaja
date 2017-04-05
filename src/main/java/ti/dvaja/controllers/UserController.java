@@ -60,7 +60,7 @@ public class UserController {
 
         this.userRepository.save(user);
 
-        return "redirect:login";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
