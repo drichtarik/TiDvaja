@@ -1,6 +1,7 @@
 package ti.dvaja.controllers;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,6 +64,14 @@ public class PostController {
             return "redirect:/";
         }
 
+        if(!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+            UserDetail principal = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            User user = this.userRepository.findByEmail(principal.getUsername());
+
+            model.addAttribute("user", user);
+        }
+
         Post post = this.postRepository.findOne(id);
 
         model.addAttribute("post", post);
@@ -80,6 +89,10 @@ public class PostController {
 
         Post post = this.postRepository.findOne(id);
 
+        if(!isUserAuthorOrAdmin(post)) {
+            return "redirect:/article/" + id;
+        }
+
         model.addAttribute("post", post);
         model.addAttribute("view", "post/edit");
 
@@ -94,6 +107,10 @@ public class PostController {
         }
 
         Post post = this.postRepository.findOne(id);
+
+        if(!isUserAuthorOrAdmin(post)) {
+            return "redirect:/article/" + id;
+        }
 
         post.setContent(postBindingModel.getContent());
         post.setTitle(postBindingModel.getTitle());
@@ -112,6 +129,10 @@ public class PostController {
 
         Post post = this.postRepository.findOne(id);
 
+        if(!isUserAuthorOrAdmin(post)) {
+            return "redirect:/article/" + id;
+        }
+
         model.addAttribute("post", post);
         model.addAttribute("view", "post/delete");
 
@@ -127,8 +148,20 @@ public class PostController {
 
         Post post = this.postRepository.findOne(id);
 
+        if(!isUserAuthorOrAdmin(post)) {
+            return "redirect:/article/" + id;
+        }
+
         this.postRepository.delete(post);
 
         return "redirect:/";
     }
+
+    private boolean isUserAuthorOrAdmin(Post post) {
+        UserDetail userDetail = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = this.userRepository.findByEmail(userDetail.getEmail());
+
+        return user.isAdmin() || user.isAuthor(post);
+    }
+
 }

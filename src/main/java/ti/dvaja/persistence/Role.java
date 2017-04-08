@@ -1,5 +1,7 @@
 package ti.dvaja.persistence;
 
+import org.springframework.util.StringUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -24,6 +26,11 @@ public class Role {
 
     public Role(){
         this.users = new HashSet<>();
+    }
+
+    @Transient
+    public String getSimpleName() {
+        return StringUtils.capitalize(this.getName().substring(5).toLowerCase());
     }
 
     public long getId() {

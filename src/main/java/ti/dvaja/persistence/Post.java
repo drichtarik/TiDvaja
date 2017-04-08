@@ -67,6 +67,14 @@ public class Post {
         this.date = date;
     }
 
+    public Set<User> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<User> authors) {
+        this.authors = authors;
+    }
+
     @Transient
     public String getSummary() {
         return this.getContent().substring(0, this.getContent().length() / 2) + "...";

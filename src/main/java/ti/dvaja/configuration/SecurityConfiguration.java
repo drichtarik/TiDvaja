@@ -41,11 +41,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf()
-                .and().exceptionHandling().accessDeniedPage("/error/403");
-    } **/
+        http.exceptionHandling().accessDeniedPage("/error/403")
+                .and().authorizeRequests().antMatchers("/", "/home").permitAll()
+                .and().formLogin().loginPage("/login").permitAll().usernameParameter("email").passwordParameter("password")
+                .and().logout().logoutSuccessUrl("/login?logout")
+                .and().csrf();
+    }
+
+     **/
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

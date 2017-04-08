@@ -3,6 +3,7 @@ package ti.dvaja.persistence;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -41,6 +42,23 @@ public class User {
         this.email = email;
         this.roles = new HashSet<>();
         this.posts = new HashSet<>();
+    }
+
+    @Transient
+    public boolean isAdmin() {
+        return this.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+    }
+
+    @Transient
+    public boolean isAuthor(Post post) {
+        for (User user : post.getAuthors()) {
+            if (Objects.equals(this.getId(), user.getId())) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 
     public long getId() {

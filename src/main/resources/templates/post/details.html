@@ -15,7 +15,7 @@
 
                     <footer>
                         <div class="pull-right">
-                            <th:block sec:authorize="isAuthenticated()">
+                            <th:block sec:authorize="isAuthenticated()" th:if="${user.isAdmin() OR user.isAuthor(post}">
                                 <a class="btn btn-success btn-xs" th:href="@{/post/edit/{id}{id=${post.id})}">Edit</a>
                                 <a class="btn btn-danger btn-xs" th:href="@{/post/delete/{id}{id=${post.id})}">Delete</a>
                             </th:block>

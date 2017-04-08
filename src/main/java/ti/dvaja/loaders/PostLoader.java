@@ -7,7 +7,6 @@ import ti.dvaja.persistence.Post;
 import ti.dvaja.repositories.PostRepository;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Logger;
 
