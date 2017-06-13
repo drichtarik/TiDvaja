@@ -1,7 +1,6 @@
 package ti.dvaja.persistence;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,12 +9,12 @@ import java.util.Set;
  * Created by drichtar on 2/17/17.
  */
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -26,12 +25,11 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_posts")
+    @ManyToMany(mappedBy = "authors")
     private Set<Post> posts = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles")
+    @JoinTable(name = "user_role")
     private Set<Role> roles;
 
     public User(){}
@@ -61,11 +59,11 @@ public class User {
         return false;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -1,7 +1,7 @@
 <main>
     <div class="container body-content span=8 offset=2">
         <div class="well">
-            <form class="form-horizontal" th:action="@{/post/edit/{id}(id=${post.id})" method="POST">
+            <form class="form-horizontal" th:action="@{/post/edit/{id}(id=${post.id})}" method="POST">
                 <fieldset>
                     <legend>Edit Post</legend>
 
@@ -16,6 +16,22 @@
                         <label class="col-sm-4 control-label" for="post_content">Content</label>
                         <div class="col-lg-6">
                             <textarea class="form-control" rows="6" id="post_content" name="content" th:field="${post.content}"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="post_category">Category</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="post_category" name="categoryId">
+                                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"  th:selected="${category.id == post.category.id}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="post_tags">Tags</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="post_tags" placeholder="Tags" name="tagString" th:value="${tags}"/>
                         </div>
                     </div>
 

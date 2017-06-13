@@ -3,21 +3,27 @@ package ti.dvaja.controllers;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ti.dvaja.bindingModel.PostBindingModel;
-import ti.dvaja.configuration.UserDetail;
+import ti.dvaja.persistence.Category;
 import ti.dvaja.persistence.Post;
+import ti.dvaja.persistence.Tag;
 import ti.dvaja.persistence.User;
+import ti.dvaja.repositories.CategoryRepository;
 import ti.dvaja.repositories.PostRepository;
+import ti.dvaja.repositories.TagRepository;
 import ti.dvaja.repositories.UserRepository;
 
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by Denko on 25/03/2017.
@@ -28,10 +34,17 @@ public class PostController {
     private PostRepository postRepository;
     @Inject
     private UserRepository userRepository;
+    @Inject
+    private CategoryRepository categoryRepository;
+    @Inject
+    private TagRepository tagRepository;
 
     @GetMapping("/post/create")
     @PreAuthorize("isAuthenticated()")
     public String create(Model model) {
+        List<Category> categories = this.categoryRepository.findAll();
+
+        model.addAttribute("categories", categories);
         model.addAttribute("view", "post/create");
 
         return "base-layout";
@@ -40,9 +53,11 @@ public class PostController {
     @PostMapping("/post/create")
     @PreAuthorize("isAuthenticated()")
     public String createProcess(PostBindingModel postBindingModel) {
-        UserDetail user = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User userEntity = this.userRepository.findByEmail(user.getUsername());
+        Category category = this.categoryRepository.findOne(postBindingModel.getCategoryId());
+        HashSet<Tag> tags = this.findTagsFromString(postBindingModel.getTagString());
 
         Set<User> authors = new HashSet<>();
         authors.add(userEntity);
@@ -50,7 +65,9 @@ public class PostController {
         Post postEntity = new Post(
                 postBindingModel.getTitle(),
                 postBindingModel.getContent(),
-                authors
+                authors,
+                category,
+                tags
         );
 
         this.postRepository.save(postEntity);
@@ -65,7 +82,7 @@ public class PostController {
         }
 
         if(!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            UserDetail principal = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             User user = this.userRepository.findByEmail(principal.getUsername());
 
@@ -73,9 +90,12 @@ public class PostController {
         }
 
         Post post = this.postRepository.findOne(id);
+        Iterable<User> authors = this.postRepository.findOne(id).getAuthors();
 
         model.addAttribute("post", post);
         model.addAttribute("view", "post/details");
+
+        model.addAttribute("authors", authors);
 
         return "base-layout";
     }
@@ -93,7 +113,12 @@ public class PostController {
             return "redirect:/article/" + id;
         }
 
+        List<Category> categories = this.categoryRepository.findAll();
+        String tagString = post.getTags().stream().map(Tag::getName).collect(Collectors.joining(", "));
+
         model.addAttribute("post", post);
+        model.addAttribute("categories", categories);
+        model.addAttribute("tags", tagString);
         model.addAttribute("view", "post/edit");
 
         return "base-layout";
@@ -112,8 +137,13 @@ public class PostController {
             return "redirect:/article/" + id;
         }
 
+        Category category = this.categoryRepository.findOne(postBindingModel.getCategoryId());
+        HashSet<Tag> tags = this.findTagsFromString(postBindingModel.getTagString());
+
         post.setContent(postBindingModel.getContent());
         post.setTitle(postBindingModel.getTitle());
+        post.setCategory(category);
+        post.setTags(tags);
 
         this.postRepository.save(post);
 
@@ -157,9 +187,28 @@ public class PostController {
         return "redirect:/";
     }
 
+    private HashSet<Tag> findTagsFromString(String tagString) {
+        HashSet<Tag> tags = new HashSet<>();
+
+        String[] tagNames = tagString.split(",\\s*");
+
+        for (String tagName : tagNames) {
+            Tag currentTag = this.tagRepository.findByName(tagName);
+
+            if (currentTag == null) {
+                currentTag = new Tag(tagName);
+                this.tagRepository.save(currentTag);
+            }
+
+            tags.add(currentTag);
+        }
+
+        return tags;
+    }
+
     private boolean isUserAuthorOrAdmin(Post post) {
-        UserDetail userDetail = (UserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = this.userRepository.findByEmail(userDetail.getEmail());
+        UserDetails userDetail = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = this.userRepository.findByEmail(userDetail.getUsername());
 
         return user.isAdmin() || user.isAuthor(post);
     }

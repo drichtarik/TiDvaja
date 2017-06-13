@@ -32,7 +32,7 @@ public class PostLoader implements ApplicationListener<ContextRefreshedEvent> {
         firstPost.setContent("Article Content");
         firstPost.setDate(new GregorianCalendar(2017, 01, 20));
 
-        postRepository.save(firstPost);
+        //postRepository.save(firstPost);
 
         log.info("Saved Post - id: " + firstPost.getId());
     }

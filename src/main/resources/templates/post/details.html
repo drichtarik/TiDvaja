@@ -2,27 +2,31 @@
     <div class="container body-content">
         <div class="row">
             <div class="col-md-12">
-                <article>
+                <post>
                     <header>
                         <h2 th:text="${post.title}"></h2>
                     </header>
 
-                    <p th:text="@{post.content}"> </p>
+                    <p th:text="${post.content}"> </p>
 
-                    <th:block th:each="user : ${post.authors}">
-                        <small class="author" th:text="user.name"></small>
+                    <th:block th:each="user : ${authors}">
+                        <small class="author" th:text="${user.name}"></small>
                     </th:block>
+
+                    <p>
+                        <a class="btn btn-default btn-xs" th:each="tag:${post.tags}" th:href="@{/tag/{name}(name=${tag.name})}" th:text="${tag.name}"></a>
+                    </p>
 
                     <footer>
                         <div class="pull-right">
-                            <th:block sec:authorize="isAuthenticated()" th:if="${user.isAdmin() OR user.isAuthor(post}">
-                                <a class="btn btn-success btn-xs" th:href="@{/post/edit/{id}{id=${post.id})}">Edit</a>
-                                <a class="btn btn-danger btn-xs" th:href="@{/post/delete/{id}{id=${post.id})}">Delete</a>
+                            <th:block sec:authorize="isAuthenticated()" th:if="${user.isAdmin() OR user.isAuthor(post)}">
+                                <a class="btn btn-success btn-xs" th:href="@{/post/edit/{id}(id=${post.id})}">Edit</a>
+                                <a class="btn btn-danger btn-xs" th:href="@{/post/delete/{id}(id=${post.id})}">Delete</a>
                             </th:block>
                             <a class="btn btn-default btn-xs" th:href="@{/}">Back &raquo;</a>
                         </div>
                     </footer>
-                </article>
+                </post>
             </div>
         </div>
     </div>

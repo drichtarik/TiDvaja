@@ -47,11 +47,11 @@ public class UserController {
             return "redirect:/register";
         }
 
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        //BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
         User user = new User(
                 userBindingModel.getName(),
-                bCryptPasswordEncoder.encode(userBindingModel.getPassword()),
+                /**bCryptPasswordEncoder.encode **/ (userBindingModel.getPassword()),
                 userBindingModel.getEmail()
         );
 
