@@ -1,6 +1,5 @@
 package ti.dvaja.controllers.admin;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ti.dvaja.bindingModel.UserEditBindingModel;
 import ti.dvaja.bindingModel.UserEditBindingModel;
 import ti.dvaja.persistence.Post;
 import ti.dvaja.persistence.Role;
@@ -48,11 +46,11 @@ public class AdminUserController {
 
     @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable Integer id) {
-        if (!this.userRepository.exists(id)) {
+        if (!this.userRepository.existsById(id)) {
             return "redirect:/admin/user/";
         }
 
-        User user = this.userRepository.findOne(id);
+        User user = this.userRepository.getOne(id);
         Iterable<Role> roles = roleRepository.findAll();
 
 
@@ -65,11 +63,11 @@ public class AdminUserController {
 
     @PostMapping("/edit/{id}")
     public String editProcess(@PathVariable Integer id, UserEditBindingModel userEditBindingModel) {
-        if(!this.userRepository.exists(id)) {
+        if(!this.userRepository.existsById(id)) {
             return "redirect:/admin/user/";
         }
 
-        User user = this.userRepository.findOne(id);
+        User user = this.userRepository.getOne(id);
 
         if(!StringUtils.isEmpty(userEditBindingModel.getPassword()) && !StringUtils.isEmpty(userEditBindingModel.getConfirmPassword())) {
             if(userEditBindingModel.getPassword().equals(userEditBindingModel.getConfirmPassword())) {
@@ -84,7 +82,7 @@ public class AdminUserController {
         Set<Role> roles = new HashSet<>();
         
         for (Integer roleId : userEditBindingModel.getRoles()) {
-            roles.add(this.roleRepository.findOne(roleId));
+            roles.add(this.roleRepository.getOne(roleId));
         }
 
         this.userRepository.save(user);
@@ -95,11 +93,11 @@ public class AdminUserController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id, Model model) {
-        if(!this.userRepository.exists(id)) {
+        if(!this.userRepository.existsById(id)) {
             return "redirect:/admin/user/";
         }
 
-        User user = this.userRepository.findOne(id);
+        User user = this.userRepository.getOne(id);
 
         model.addAttribute("user", user);
         model.addAttribute("view", "admin/user/delete");
@@ -109,11 +107,11 @@ public class AdminUserController {
 
     @PostMapping("/delete/{id}")
     public String deleteProcess(@PathVariable Integer id) {
-        if (!this.userRepository.exists(id)) {
+        if (!this.userRepository.existsById(id)) {
             return "redirect:/admin/user/";
         }
 
-        User user = this.userRepository.findOne(id);
+        User user = this.userRepository.getOne(id);
 
         for (Post post : user.getPosts()) {
             this.postRepository.delete(post);

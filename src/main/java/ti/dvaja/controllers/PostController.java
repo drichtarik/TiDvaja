@@ -56,7 +56,7 @@ public class PostController {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User userEntity = this.userRepository.findByEmail(user.getUsername());
-        Category category = this.categoryRepository.findOne(postBindingModel.getCategoryId());
+        Category category = this.categoryRepository.getOne(postBindingModel.getCategoryId());
         HashSet<Tag> tags = this.findTagsFromString(postBindingModel.getTagString());
 
         Set<User> authors = new HashSet<>();
@@ -77,7 +77,7 @@ public class PostController {
 
     @GetMapping("/post/{id}")
     public String details(Model model, @PathVariable Integer id) {
-        if (!this.postRepository.exists(id)) {
+        if (!this.postRepository.existsById(id)) {
             return "redirect:/";
         }
 
@@ -89,8 +89,8 @@ public class PostController {
             model.addAttribute("user", user);
         }
 
-        Post post = this.postRepository.findOne(id);
-        Iterable<User> authors = this.postRepository.findOne(id).getAuthors();
+        Post post = this.postRepository.getOne(id);
+        Iterable<User> authors = this.postRepository.getOne(id).getAuthors();
 
         model.addAttribute("post", post);
         model.addAttribute("view", "post/details");
@@ -103,11 +103,11 @@ public class PostController {
     @GetMapping("/post/edit/{id}")
     @PreAuthorize("isAuthenticated()")
     public String edit(Model model, @PathVariable Integer id) {
-        if (!this.postRepository.exists(id)) {
+        if (!this.postRepository.existsById(id)) {
             return "redirect:/";
         }
 
-        Post post = this.postRepository.findOne(id);
+        Post post = this.postRepository.getOne(id);
 
         if(!isUserAuthorOrAdmin(post)) {
             return "redirect:/article/" + id;
@@ -127,17 +127,17 @@ public class PostController {
     @PostMapping("/post/edit/{id}")
     @PreAuthorize("isAuthenticated()")
     public String editProcess(PostBindingModel postBindingModel, @PathVariable Integer id) {
-        if (!this.postRepository.exists(id)) {
+        if (!this.postRepository.existsById(id)) {
             return "redirect:/";
         }
 
-        Post post = this.postRepository.findOne(id);
+        Post post = this.postRepository.getOne(id);
 
         if(!isUserAuthorOrAdmin(post)) {
             return "redirect:/article/" + id;
         }
 
-        Category category = this.categoryRepository.findOne(postBindingModel.getCategoryId());
+        Category category = this.categoryRepository.getOne(postBindingModel.getCategoryId());
         HashSet<Tag> tags = this.findTagsFromString(postBindingModel.getTagString());
 
         post.setContent(postBindingModel.getContent());
@@ -153,11 +153,11 @@ public class PostController {
     @GetMapping("/post/delete/{id}")
     @PreAuthorize("isAuthenticated()")
     public String delete(Model model, @PathVariable Integer id) {
-        if (!this.postRepository.exists(id)) {
+        if (!this.postRepository.existsById(id)) {
             return "redirect:/";
         }
 
-        Post post = this.postRepository.findOne(id);
+        Post post = this.postRepository.getOne(id);
 
         if(!isUserAuthorOrAdmin(post)) {
             return "redirect:/article/" + id;
@@ -172,11 +172,11 @@ public class PostController {
     @PostMapping("/post/delete/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteProcess(@PathVariable Integer id) {
-        if (!this.postRepository.exists(id)) {
+        if (!this.postRepository.existsById(id)) {
             return "redirect:/";
         }
 
-        Post post = this.postRepository.findOne(id);
+        Post post = this.postRepository.getOne(id);
 
         if(!isUserAuthorOrAdmin(post)) {
             return "redirect:/article/" + id;

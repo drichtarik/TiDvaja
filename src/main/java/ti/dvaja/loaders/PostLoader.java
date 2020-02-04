@@ -7,6 +7,7 @@ import ti.dvaja.persistence.Post;
 import ti.dvaja.repositories.PostRepository;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Logger;
 
@@ -30,7 +31,7 @@ public class PostLoader implements ApplicationListener<ContextRefreshedEvent> {
         Post firstPost = new Post();
         firstPost.setTitle("My First Post");
         firstPost.setContent("Article Content");
-        firstPost.setDate(new GregorianCalendar(2017, 01, 20));
+        firstPost.setDateCreated(new Date(2017, 01, 20));
 
         //postRepository.save(firstPost);
 

@@ -1,6 +1,7 @@
 package ti.dvaja.persistence;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -9,7 +10,6 @@ import java.util.Set;
  * Created by drichtar on 2/17/17.
  */
 @Entity
-@Table(name = "user")
 public class User {
 
     @Id
@@ -19,18 +19,23 @@ public class User {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 20)
     private String password;
 
     @Column(nullable = false, unique = true)
     private String email;
 
+    private Date created;
+
     @ManyToMany(mappedBy = "authors")
     private Set<Post> posts = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role")
+    @JoinColumn(table = "user_role")
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Comment> usersComments;
 
     public User(){}
 
@@ -40,6 +45,7 @@ public class User {
         this.email = email;
         this.roles = new HashSet<>();
         this.posts = new HashSet<>();
+        this.usersComments = new HashSet<>();
     }
 
     @Transient

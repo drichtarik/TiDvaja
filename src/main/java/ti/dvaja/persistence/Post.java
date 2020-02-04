@@ -1,7 +1,7 @@
 package ti.dvaja.persistence;
 
 import javax.persistence.*;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,8 +9,8 @@ import java.util.Set;
  * Created by drichtar on 2/16/17.
  */
 @Entity
-@Table(name = "post")
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -26,7 +26,9 @@ public class Post {
     private Set<User> authors;
 
     @Column(nullable = false)
-    private GregorianCalendar date = new GregorianCalendar();
+    private Date dateCreated = new Date(2017, 01, 20);
+
+    private Date dateModified;
 
     @ManyToOne()
     @JoinColumn(nullable = false, name = "categoryId")
@@ -36,6 +38,9 @@ public class Post {
     @JoinColumn(table = "post_tag")
     private Set<Tag> tags;
 
+    @OneToMany(mappedBy = "post")
+    private Set<Comment> comments;
+
     public Post(){}
 
     public Post(String title, String content, Set<User> authors, Category category, HashSet<Tag> tags) {
@@ -44,6 +49,7 @@ public class Post {
         this.authors = authors;
         this.category = category;
         this.tags = tags;
+        this.dateModified = null;
     }
 
     public Integer getId() {
@@ -70,12 +76,20 @@ public class Post {
         this.content = content;
     }
 
-    public GregorianCalendar getDate() {
-        return date;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setDate(GregorianCalendar date) {
-        this.date = date;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
     }
 
     public Set<User> getAuthors() {
@@ -100,6 +114,14 @@ public class Post {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     @Transient

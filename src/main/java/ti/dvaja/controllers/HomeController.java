@@ -42,11 +42,11 @@ public class HomeController {
 
     @GetMapping("/category/{id}")
     public String listPosts(Model model, @PathVariable Integer id) {
-        if (!this.categoryRepository.exists(id)) {
+        if (!this.categoryRepository.existsById(id)) {
             return "redirect:/";
         }
 
-        Category category = this.categoryRepository.findOne(id);
+        Category category = this.categoryRepository.getOne(id);
         Set<Post> posts = category.getPosts();
 
         model.addAttribute("posts", posts);

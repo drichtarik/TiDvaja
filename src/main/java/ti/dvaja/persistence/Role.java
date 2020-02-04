@@ -3,7 +3,6 @@ package ti.dvaja.persistence;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,7 +10,6 @@ import java.util.Set;
  * Created by drichtar on 2/17/17.
  */
 @Entity
-@Table(name = "role")
 public class Role {
 
     @Id

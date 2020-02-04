@@ -65,11 +65,11 @@ public class CategoryController {
 
     @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable Integer id) {
-        if (!this.categoryRepository.exists(id)) {
+        if (!this.categoryRepository.existsById(id)) {
             return "redirect:/admin/categories/";
         }
 
-        Category category = this.categoryRepository.findOne(id);
+        Category category = this.categoryRepository.getOne(id);
 
         model.addAttribute("category", category);
         model.addAttribute("view", "admin/category/edit");
@@ -79,11 +79,11 @@ public class CategoryController {
 
     @PostMapping("/edit/{id}")
     public String editProcess(CategoryBindingModel categoryBindingModel, @PathVariable Integer id) {
-        if (!this.categoryRepository.exists(id)) {
+        if (!this.categoryRepository.existsById(id)) {
             return "redirect:/admin/categories/";
         }
 
-        Category category = this.categoryRepository.findOne(id);
+        Category category = this.categoryRepository.getOne(id);
 
         category.setName(categoryBindingModel.getName());
         this.categoryRepository.save(category);
@@ -93,11 +93,11 @@ public class CategoryController {
 
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable Integer id) {
-        if (!this.categoryRepository.exists(id)) {
+        if (!this.categoryRepository.existsById(id)) {
             return "redirect:/admin/categories/";
         }
 
-        Category category = categoryRepository.findOne(id);
+        Category category = categoryRepository.getOne(id);
 
         model.addAttribute("category", category);
         model.addAttribute("view", "admin/category/delete");
@@ -107,11 +107,11 @@ public class CategoryController {
 
     @PostMapping("/delete/{id}")
     public String deleteProcess(CategoryBindingModel categoryBindingModel, @PathVariable Integer id) {
-        if (!this.categoryRepository.exists(id)) {
+        if (!this.categoryRepository.existsById(id)) {
             return "redirect:/admin/categories";
         }
 
-        Category category = categoryRepository.findOne(id);
+        Category category = categoryRepository.getOne(id);
 
         for (Post post : category.getPosts()) {
             this.postRepository.delete(post);
